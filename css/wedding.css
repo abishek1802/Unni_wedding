@@ -1480,22 +1480,25 @@ img { display: block; }
 @media (max-height: 850px) {
 
   /* ── Names ─────────────────────────────── */
-
+  .splash-invite {
+    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 194px) !important;
+  }
   .splash-bride {
-    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 275px);
+    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 240px) !important;
     font-size: clamp(34px, 10.1vw, 40px) !important;
   }
 
   .splash-weds-wrap {
-    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 350px);
+    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 315px) !important;
   }
 
   .splash-weds {
     font-size: 24px !important;
+    
   }
 
   .splash-groom {
-    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 398px);
+    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 363px) !important;
     font-size: clamp(34px, 10.1vw, 40px) !important;
   }
 
