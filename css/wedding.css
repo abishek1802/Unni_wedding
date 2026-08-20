@@ -1429,68 +1429,82 @@ img { display: block; }
   border: 1px solid rgba(198, 150, 82, 0.45);
   box-shadow: 0 6px 20px rgba(80, 20, 20, 0.06);
 }
-/* ════════════════════════════════════════════
-   RESPONSIVE — COMPACT HEIGHTS (≤820px)
-   Fixes swipe-CTA / countdown overlap on
-   iPhone mini, 13 mini, small Androids
-════════════════════════════════════════════ */
-@media (max-height: 820px) {
-  /* Scale names down so bride's bottom edge sits higher */
-  .splash-groom, .splash-bride { font-size: clamp(26px, 7.7vw, 30px); }
-  .splash-weds  { font-size: clamp(28px, 8.9vw, 32px); }
+/* ═══════════════════════════════════════════
+   RESPONSIVE — SHORT PHONE SCREENS
+   Keeps names, countdown, date and swipe
+   separated on iPhone / small Android screens
+═══════════════════════════════════════════ */
 
-  /* Shrink countdown boxes */
-  .count-box       { width: 54px; height: 70px; }
-  .count-box span  { font-size: 24px; }
-  .count-label     { font-size: 12px; }
-  .count-sep       { padding-bottom: 28px; }
+@media (max-height: 850px) {
 
-  /* Bottom-anchor timer, date, and swipe — they never overlap regardless of height */
-  .swipe-wrap {
-    bottom: calc(max(env(safe-area-inset-bottom, 0px), 20px) + 16px);
-  }
-  .event-meta {
-    top: auto;
-    bottom: calc(max(env(safe-area-inset-bottom, 0px), 20px) + 96px);
-    /* = 16px gap + 68px swipe + 12px gap  = 96 */
-  }
-  .countdown {
-    top: auto;
-    bottom: calc(max(env(safe-area-inset-bottom, 0px), 20px) + 148px);
-    /* = 96px + 36px meta + 16px gap = 148 */
-  }
-
-  /* Shrink swipe track */
-  .swipe-track  { height: 68px; }
-  .swipe-thumb  { width: 54px; height: 54px; }
-  .swipe-label  { padding-left: 70px; font-size: 13px; }
-  .swipe-track.done .swipe-label { padding-left: 0; }
-}
-
-/* ════════════════════════════════════════════
-   RESPONSIVE — TINY SCREENS (≤700px, e.g. SE)
-════════════════════════════════════════════ */
-@media (max-height: 700px) {
-  /* Compress the names block upward to give countdown room */
-  .splash-invite {
-    top: calc(max(env(safe-area-inset-top, 0px), 44px) + 210px);
-    font-size: 10px;
-  }
-  .splash-groom {
-    top: calc(max(env(safe-area-inset-top, 0px), 44px) + 238px);
-    font-size: clamp(22px, 6.5vw, 24px);
-  }
-  .splash-weds-wrap {
-    top: calc(max(env(safe-area-inset-top, 0px), 44px) + 284px);
-    width: 100px; height: 48px;
-  }
+  /* Names */
   .splash-bride {
-    top: calc(max(env(safe-area-inset-top, 0px), 44px) + 330px);
-    font-size: clamp(22px, 6.5vw, 24px);
+    top: 275px !important;
+    font-size: clamp(34px, 10.5vw, 44px) !important;
   }
-  /* Give countdown a touch more clearance on SE */
+
+  .splash-weds-wrap {
+    top: 350px !important;
+  }
+
+  .splash-groom {
+    top: 398px !important;
+    font-size: clamp(34px, 10.1vw, 40px) !important;
+  }
+
+
+  /* Countdown */
   .countdown {
-    bottom: calc(max(env(safe-area-inset-bottom, 0px), 16px) + 152px);
+    top: auto !important;
+    bottom: 205px !important;
+
+    left: 0 !important;
+    right: 0 !important;
+
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: flex-end !important;
+  }
+
+  .count-box {
+    width: 54px !important;
+    height: 70px !important;
+  }
+
+  .count-box span {
+    font-size: 24px !important;
+  }
+
+  .count-label {
+    font-size: 11px !important;
+  }
+
+
+  /* Date + venue */
+  .event-meta {
+    top: auto !important;
+    bottom: 125px !important;
+  }
+
+
+  /* Swipe */
+  .swipe-wrap {
+    bottom: 25px !important;
+  }
+
+  .swipe-track {
+    height: 68px !important;
+  }
+
+  .swipe-thumb {
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .swipe-label {
+    padding-left: 70px !important;
+    font-size: 13px !important;
   }
 }
 /* ═══════════════════════════════════════
@@ -1535,4 +1549,22 @@ img { display: block; }
 #countdown::after {
   content: none !important;
   display: none !important;
+}
+/* ── iPhone / short viewport splash fix ───── */
+
+@media (max-height: 850px) {
+
+  .countdown {
+    top: auto !important;
+    bottom: 205px !important;
+  }
+
+  .event-meta {
+    top: auto !important;
+    bottom: 135px !important;
+  }
+
+  .swipe-wrap {
+    bottom: 25px !important;
+  }
 }
