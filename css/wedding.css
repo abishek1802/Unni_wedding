@@ -1429,84 +1429,6 @@ img { display: block; }
   border: 1px solid rgba(198, 150, 82, 0.45);
   box-shadow: 0 6px 20px rgba(80, 20, 20, 0.06);
 }
-/* ═══════════════════════════════════════════
-   RESPONSIVE — SHORT PHONE SCREENS
-   Keeps names, countdown, date and swipe
-   separated on iPhone / small Android screens
-═══════════════════════════════════════════ */
-
-@media (max-height: 850px) {
-
-  /* Names */
-  .splash-bride {
-    top: 275px !important;
-    font-size: clamp(34px, 10.5vw, 44px) !important;
-  }
-
-  .splash-weds-wrap {
-    top: 350px !important;
-  }
-
-  .splash-groom {
-    top: 398px !important;
-    font-size: clamp(34px, 10.1vw, 40px) !important;
-  }
-
-
-  /* Countdown */
-  .countdown {
-    top: auto !important;
-    bottom: 205px !important;
-
-    left: 0 !important;
-    right: 0 !important;
-
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: center !important;
-    align-items: flex-end !important;
-  }
-
-  .count-box {
-    width: 54px !important;
-    height: 70px !important;
-  }
-
-  .count-box span {
-    font-size: 24px !important;
-  }
-
-  .count-label {
-    font-size: 11px !important;
-  }
-
-
-  /* Date + venue */
-  .event-meta {
-    top: auto !important;
-    bottom: 125px !important;
-  }
-
-
-  /* Swipe */
-  .swipe-wrap {
-    bottom: 25px !important;
-  }
-
-  .swipe-track {
-    height: 68px !important;
-  }
-
-  .swipe-thumb {
-    width: 54px !important;
-    height: 54px !important;
-  }
-
-  .swipe-label {
-    padding-left: 70px !important;
-    font-size: 13px !important;
-  }
-}
 /* ═══════════════════════════════════════
    CUSTOM HINDU WEDDING STYLE
 ═══════════════════════════════════════ */
@@ -1550,21 +1472,85 @@ img { display: block; }
   content: none !important;
   display: none !important;
 }
-/* ── iPhone / short viewport splash fix ───── */
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — SHORT PHONE SCREENS
+═══════════════════════════════════════════ */
 
 @media (max-height: 850px) {
+
+  /* ── Names ─────────────────────────────── */
+
+  .splash-bride {
+    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 275px);
+    font-size: clamp(34px, 10.1vw, 40px) !important;
+  }
+
+  .splash-weds-wrap {
+    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 350px);
+  }
+
+  .splash-weds {
+    font-size: 24px !important;
+  }
+
+  .splash-groom {
+    top: calc(max(env(safe-area-inset-top, 0px), 54px) + 398px);
+    font-size: clamp(34px, 10.1vw, 40px) !important;
+  }
+
+  /* ── Countdown ─────────────────────────── */
 
   .countdown {
     top: auto !important;
     bottom: 205px !important;
+
+    left: 0 !important;
+    right: 0 !important;
+
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: flex-end !important;
   }
+
+  .count-box {
+    width: 54px !important;
+    height: 70px !important;
+  }
+
+  .count-box span {
+    font-size: 24px !important;
+  }
+
+  .count-label {
+    font-size: 11px !important;
+  }
+
+  /* ── Event date / venue ──────────────── */
 
   .event-meta {
     top: auto !important;
-    bottom: 135px !important;
+    bottom: 125px !important;
   }
+
+  /* ── Swipe ─────────────────────────────── */
 
   .swipe-wrap {
     bottom: 25px !important;
+  }
+
+  .swipe-track {
+    height: 68px !important;
+  }
+
+  .swipe-thumb {
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .swipe-label {
+    padding-left: 70px !important;
+    font-size: 13px !important;
   }
 }
