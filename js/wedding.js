@@ -117,13 +117,28 @@ setInterval(updateCountdown, 1000);
   }
 
   function onDragStart(clientX) {
-    getGeometry();
-    isDragging = true;
-    startX     = clientX - currentX;
-    swipeThumb.style.transition = 'none';
-    swipeFill.style.transition  = 'none';
-    swipeTrack.style.cursor     = 'grabbing';
+  getGeometry();
+  isDragging = true;
+  startX = clientX - currentX;
+
+  swipeThumb.style.transition = 'none';
+  swipeFill.style.transition = 'none';
+  swipeTrack.style.cursor = 'grabbing';
+
+  // Try to start music from the user's touch gesture
+  if (bgMusic && !musicStarted) {
+    bgMusic.volume = 0;
+
+    bgMusic.play().then(() => {
+      musicStarted = true;
+      musicMuted = false;
+      updateMusicUI();
+      fadeVolume(0, 0.55, 2000);
+    }).catch(() => {
+      // Browser blocked playback
+    });
   }
+}
 
   function onDragMove(clientX) {
     if (!isDragging) return;
@@ -186,25 +201,17 @@ setInterval(updateCountdown, 1000);
   }
 
   // ── Touch events ───────────────────────────
-swipeThumb.addEventListener('touchstart', e => {
-  e.preventDefault();
+  swipeThumb.addEventListener('touchstart', e => {
+    e.preventDefault();
+    onDragStart(e.touches[0].clientX);
+  }, { passive: false });
 
-  // Try to start music immediately from the user's touch gesture
-  if (bgMusic && !musicStarted) {
-    bgMusic.volume = 0;
-
-    bgMusic.play().then(() => {
-      musicStarted = true;
-      musicMuted = false;
-      updateMusicUI();
-      fadeVolume(0, 0.55, 2000);
-    }).catch(() => {
-      // Browser still blocked autoplay
-    });
-  }
-
-  onDragStart(e.touches[0].clientX);
-}, { passive: false });
+  document.addEventListener('touchmove', e => {
+    if (isDragging) {
+      e.preventDefault();
+      onDragMove(e.touches[0].clientX);
+    }
+  }, { passive: false });
 
   document.addEventListener('touchend', () => onDragEnd());
 
