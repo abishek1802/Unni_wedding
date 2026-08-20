@@ -20,29 +20,24 @@ const musicPillDet  = document.getElementById('musicPillDetails');
 let musicStarted = false;  // has audio.play() ever succeeded?
 let musicMuted   = false;  // is it currently muted?
 
-/* ════════════════════════════════════════════
-   AUDIO UNLOCK — iOS Safari requires a play()
-   call during a user gesture before any later
-   play() will succeed. We trigger a silent
-   play/pause on the very first touch so that
-   by the time the swipe completes, the audio
-   context is already unlocked.
-════════════════════════════════════════════ */
-(function unlockAudioOnFirstTouch() {
-  if (!bgMusic) return;
-  function unlock() {
-    bgMusic.muted = true;
-    bgMusic.play().then(() => {
-      bgMusic.pause();
-      bgMusic.currentTime = 0;
-      bgMusic.muted = false;
-    }).catch(() => {});
-    document.removeEventListener('touchstart', unlock, true);
-    document.removeEventListener('mousedown',  unlock, true);
+function startMusicFromGesture() {
+  if (!bgMusic || musicStarted) return;
+
+  bgMusic.muted = false;
+  bgMusic.volume = 0.55;
+
+  const playPromise = bgMusic.play();
+
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      musicStarted = true;
+      musicMuted = false;
+      updateMusicUI();
+    }).catch((err) => {
+      console.log('Music playback blocked:', err);
+    });
   }
-  document.addEventListener('touchstart', unlock, { capture: true, once: true, passive: true });
-  document.addEventListener('mousedown',  unlock, { capture: true, once: true });
-})();
+}
 
 /* ════════════════════════════════════════════
    COUNTDOWN TIMER
@@ -124,20 +119,6 @@ setInterval(updateCountdown, 1000);
   swipeThumb.style.transition = 'none';
   swipeFill.style.transition = 'none';
   swipeTrack.style.cursor = 'grabbing';
-
-  // Try to start music from the user's touch gesture
-  if (bgMusic && !musicStarted) {
-    bgMusic.volume = 0;
-
-    bgMusic.play().then(() => {
-      musicStarted = true;
-      musicMuted = false;
-      updateMusicUI();
-      fadeVolume(0, 0.55, 2000);
-    }).catch(() => {
-      // Browser blocked playback
-    });
-  }
 }
 
   function onDragMove(clientX) {
@@ -184,53 +165,55 @@ setInterval(updateCountdown, 1000);
     // ── Start music SYNCHRONOUSLY during user gesture ──────────
     // bgMusic.play() must be called within the touchend/mouseup
     // event handler — any setTimeout breaks the autoplay policy.
-    if (bgMusic && !musicStarted) {
-      bgMusic.volume = 0;
-      bgMusic.play().then(() => {
-        musicStarted = true;
-        musicMuted   = false;
-        updateMusicUI();
-        fadeVolume(0, 0.55, 2000);
-      }).catch(() => {
-        // Autoplay blocked — user can tap the music pill to start
-      });
-    }
+ 
 
     // Page reveal can safely be deferred (it's UI only)
     setTimeout(revealDetails, 700);
   }
+// ── Touch events ───────────────────────────
+swipeThumb.addEventListener('touchstart', e => {
+  e.preventDefault();
 
-  // ── Touch events ───────────────────────────
-  swipeThumb.addEventListener('touchstart', e => {
+  // Start music from the user's touch gesture
+  startMusicFromGesture();
+
+  onDragStart(e.touches[0].clientX);
+}, { passive: false });
+
+document.addEventListener('touchmove', e => {
+  if (isDragging) {
     e.preventDefault();
-    onDragStart(e.touches[0].clientX);
-  }, { passive: false });
+    onDragMove(e.touches[0].clientX);
+  }
+}, { passive: false });
 
-  document.addEventListener('touchmove', e => {
-    if (isDragging) {
-      e.preventDefault();
-      onDragMove(e.touches[0].clientX);
-    }
-  }, { passive: false });
+document.addEventListener('touchend', () => onDragEnd());
+// ── Mouse events (desktop) ─────────────────
 
-  document.addEventListener('touchend', () => onDragEnd());
+swipeThumb.addEventListener('mousedown', e => {
+  e.preventDefault();
 
-  // ── Mouse events (desktop) ─────────────────
-  swipeThumb.addEventListener('mousedown', e => {
-    e.preventDefault();
-    onDragStart(e.clientX);
-  });
-  document.addEventListener('mousemove', e => {
-    if (isDragging) onDragMove(e.clientX);
-  });
-  document.addEventListener('mouseup', () => onDragEnd());
+  startMusicFromGesture();
+  onDragStart(e.clientX);
+});
 
-  // Resize
-  window.addEventListener('resize', () => {
-    if (!swipeTrack.classList.contains('done')) { currentX = 0; }
-  });
+document.addEventListener('mousemove', e => {
+  if (isDragging) {
+    onDragMove(e.clientX);
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  onDragEnd();
+});
+
+// Resize
+window.addEventListener('resize', () => {
+  if (!swipeTrack.classList.contains('done')) {
+    currentX = 0;
+  }
+});
 })();
-
 /* ════════════════════════════════════════════
    PAGE TRANSITION — REVEAL DETAILS
 ════════════════════════════════════════════ */
