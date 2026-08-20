@@ -1,10 +1,6 @@
 'use strict';
 
-/* ══════════════════════════════════════════
-   WEDDING WEBSITE — JAVASCRIPT
-   Mohammed Abdul Razak & Henna Shireen
-   Nikah: Wednesday, 20 May 2026, 5:30 PM IST
-══════════════════════════════════════════ */
+
 
 // ── Wedding date target ────────────────────
 const WEDDING_DATE = new Date('2026-12-11T11:00:00+05:30');
@@ -190,17 +186,25 @@ setInterval(updateCountdown, 1000);
   }
 
   // ── Touch events ───────────────────────────
-  swipeThumb.addEventListener('touchstart', e => {
-    e.preventDefault();
-    onDragStart(e.touches[0].clientX);
-  }, { passive: false });
+swipeThumb.addEventListener('touchstart', e => {
+  e.preventDefault();
 
-  document.addEventListener('touchmove', e => {
-    if (isDragging) {
-      e.preventDefault();
-      onDragMove(e.touches[0].clientX);
-    }
-  }, { passive: false });
+  // Try to start music immediately from the user's touch gesture
+  if (bgMusic && !musicStarted) {
+    bgMusic.volume = 0;
+
+    bgMusic.play().then(() => {
+      musicStarted = true;
+      musicMuted = false;
+      updateMusicUI();
+      fadeVolume(0, 0.55, 2000);
+    }).catch(() => {
+      // Browser still blocked autoplay
+    });
+  }
+
+  onDragStart(e.touches[0].clientX);
+}, { passive: false });
 
   document.addEventListener('touchend', () => onDragEnd());
 
