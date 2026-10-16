@@ -3,7 +3,7 @@
 
 
 // ── Wedding date target ────────────────────
-const WEDDING_DATE = new Date('2026-12-11T11:00:00+05:30');
+const WEDDING_DATE = new Date('2026-12-12T11:00:00+05:30');
 
 // ── DOM refs ───────────────────────────────
 const splash        = document.getElementById('splash');
@@ -287,7 +287,7 @@ if (musicPillDet) musicPillDet.addEventListener('click', toggleMusic);
 ════════════════════════════════════════════ */
 async function downloadWeddingCard(btn) {
   const CARD_URL = 'assets/wedding-card.png';
-  const FILENAME = 'Mohammed-Henna-WeddingCard.png';
+  const FILENAME = 'Unni-Sree-WeddingCard.png';
 
   const origText = btn.textContent;
   btn.textContent = 'Downloading…';
@@ -303,7 +303,7 @@ async function downloadWeddingCard(btn) {
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({
         files: [file],
-        title: 'Mohammed & Henna — Wedding Card',
+        title: 'Unni-sree — Wedding Card',
         text:  'You\'re invited! ✨'
       });
     } else {
