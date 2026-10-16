@@ -21,22 +21,23 @@ let musicStarted = false;  // has audio.play() ever succeeded?
 let musicMuted   = false;  // is it currently muted?
 
 function startMusicFromGesture() {
-  if (!bgMusic || musicStarted) return;
+  if (!bgMusic) return;
+
+  // Already playing? Leave it alone.
+  if (!bgMusic.paused && !bgMusic.ended) return;
 
   bgMusic.muted = false;
   bgMusic.volume = 0.55;
 
-  const playPromise = bgMusic.play();
-
-  if (playPromise !== undefined) {
-    playPromise.then(() => {
+  bgMusic.play()
+    .then(() => {
       musicStarted = true;
       musicMuted = false;
       updateMusicUI();
-    }).catch((err) => {
+    })
+    .catch((err) => {
       console.log('Music playback blocked:', err);
     });
-  }
 }
 
 /* ════════════════════════════════════════════
@@ -149,6 +150,7 @@ setInterval(updateCountdown, 1000);
 
   function completeSwipe() {
     getGeometry();
+    startMusicFromGesture();
     swipeThumb.style.transition = 'transform 0.3s cubic-bezier(0.32,0.72,0,1)';
     swipeFill.style.transition  = 'width 0.3s ease';
     setThumbX(maxTravel);
