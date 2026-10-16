@@ -243,30 +243,36 @@ function fadeVolume(from, to, durationMs) {
   }, interval);
 }
 
+
 function toggleMusic() {
   if (!bgMusic) return;
 
-  if (!musicStarted) {
-    // Audio hasn't started yet (swipe not done / autoplay blocked)
-    // This click IS a user gesture so play() will work here
-    bgMusic.volume = 0;
-    bgMusic.play().then(() => {
-      musicStarted = true;
-      musicMuted   = false;
-      updateMusicUI();
-      fadeVolume(0, 0.55, 1000);
-    }).catch(() => {});
+  // Start or resume playback after a user click
+  if (bgMusic.paused) {
+    bgMusic.muted = false;
+    bgMusic.volume = 0.55;
+
+    bgMusic.play()
+      .then(() => {
+        musicStarted = true;
+        musicMuted = false;
+        updateMusicUI();
+      })
+      .catch((err) => {
+        console.log('Music playback blocked:', err);
+      });
+
     return;
   }
 
-  // Toggle mute / unmute (don't pause — keep buffer position)
-  musicMuted    = !musicMuted;
+  // If playing, mute or unmute
+  musicMuted = !musicMuted;
   bgMusic.muted = musicMuted;
   updateMusicUI();
 }
 
 function updateMusicUI() {
-  const isAudible = musicStarted && !musicMuted;
+  const isAudible = musicStarted && !musicMuted && !bgMusic.paused;
   const pills = [musicPill, musicPillDet].filter(Boolean);
   pills.forEach(p => {
     if (isAudible) {
@@ -281,7 +287,21 @@ function updateMusicUI() {
 
 if (musicPill)    musicPill.addEventListener('click', toggleMusic);
 if (musicPillDet) musicPillDet.addEventListener('click', toggleMusic);
+// Pause background music when the visitor leaves the tab
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && bgMusic) {
+    bgMusic.pause();
+    updateMusicUI();
+  }
+});
 
+// Also stop music when the page is being unloaded
+window.addEventListener('pagehide', () => {
+  if (bgMusic) {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+  }
+});
 /* ════════════════════════════════════════════
    DOWNLOAD CARD BUTTON
 ════════════════════════════════════════════ */
