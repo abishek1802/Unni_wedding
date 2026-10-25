@@ -348,7 +348,83 @@ async function downloadWeddingCard(btn) {
 document.querySelectorAll('.download-btn:not(.disabled)').forEach(btn => {
   btn.addEventListener('click', () => downloadWeddingCard(btn));
 });
+/* ── Engagement Photo Gallery ─────────────── */
 
+const engagementPhotoFiles = [
+  "PIC03319_result.webp",
+  "PIC03447_result.webp",
+  "PIC03594_result.webp",
+  "PIC03691_result.webp",
+  "PIC03799_result.webp",
+  "PIC03904_result.webp",
+  "PIC04105_result.webp",
+  "PIC04198_result.webp",
+  "PIC04300_result.webp",
+  "PIC04359_result.webp",
+];
+
+const engagementModal =
+  document.getElementById("engagementGalleryModal");
+
+const engagementOpenButton =
+  document.getElementById("openEngagementGallery");
+
+const engagementCloseButton =
+  document.getElementById("closeEngagementGallery");
+
+const engagementGallery =
+  document.getElementById("engagementGalleryScroll");
+
+function openEngagementGallery() {
+  engagementGallery.replaceChildren();
+
+  engagementPhotoFiles.forEach((filename, index) => {
+    const photo = document.createElement("img");
+
+    photo.src = `assets/Engage/${filename}`;
+    photo.alt = `Engagement photo ${index + 1}`;
+    photo.className = "engagement-gallery-photo";
+    photo.loading = "lazy";
+    photo.decoding = "async";
+
+    engagementGallery.appendChild(photo);
+  });
+
+  engagementModal.setAttribute("aria-hidden", "false");
+  engagementCloseButton.focus();
+}
+
+function closeEngagementGallery() {
+  engagementModal.setAttribute("aria-hidden", "true");
+  engagementOpenButton.focus();
+}
+
+engagementOpenButton.addEventListener(
+  "click",
+  openEngagementGallery
+);
+
+engagementCloseButton.addEventListener(
+  "click",
+  closeEngagementGallery
+);
+
+// Close when the dark background is clicked.
+engagementModal.addEventListener("click", (event) => {
+  if (event.target === engagementModal) {
+    closeEngagementGallery();
+  }
+});
+
+// Close with Escape on desktop.
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Escape" &&
+    engagementModal.getAttribute("aria-hidden") === "false"
+  ) {
+    closeEngagementGallery();
+  }
+});
 
 /* ════════════════════════════════════════════
    HAPTIC FEEDBACK (PWA / Safari)
