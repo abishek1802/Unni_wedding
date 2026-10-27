@@ -420,39 +420,52 @@ img { display: block; }
   text-shadow: 0 1px 3px rgba(0,0,0,.4);
 }
 
+
 /* ── Swipe CTA ───────────────────────────── */
-/*  Figma: centered, y=698, w=296, h=78        */
 .swipe-wrap {
-  bottom: calc(env(safe-area-inset-bottom, 34px) + 80px); /* Figma y=725 */
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom, 34px) + 80px);
   left: 50%;
   transform: translateX(-50%);
-  width: min(296px, calc(100% - 48px));
-  
+  width: min(320px, calc(100% - 36px));
+  z-index: 100;
 }
+
 .swipe-track {
   position: relative;
   width: 100%;
   height: 78px;
   border-radius: var(--radius-pill);
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: var(--shadow-float);
-  border: 1px solid rgba(255,255,255,0.28);
+
+  /* Stronger contrast so it doesn't disappear into the background */
+  background: rgba(50, 20, 43, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.24),
+    0 0 0 3px rgba(252, 114, 215, 0.12);
+
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
 }
+
 .swipe-fill {
   position: absolute;
-  inset: 0;
-  border-radius: var(--radius-pill);
-  background: linear-gradient(90deg,
-    rgba(120,2,105,0.35),
-    rgba(252,114,215,0.25));
+  inset: 0 auto 0 0;
   width: 0;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(
+    90deg,
+    rgba(120, 2, 105, 0.65),
+    rgba(252, 114, 215, 0.42)
+  );
+  pointer-events: none;
 }
+
 .swipe-thumb {
   position: absolute;
   left: 8px;
@@ -461,44 +474,87 @@ img { display: block; }
   width: 62px;
   height: 62px;
   border-radius: 50%;
+
   background: #fff;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  border: 2px solid rgba(252, 114, 215, 0.65);
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.25);
+
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
+
   cursor: grab;
   will-change: transform;
+  animation: swipe-nudge 1.8s ease-in-out infinite;
 }
-.swipe-thumb:active { cursor: grabbing; }
-.swipe-thumb svg { pointer-events: none; }
+
+.swipe-thumb:active {
+  cursor: grabbing;
+  animation: none;
+}
+
+.swipe-thumb svg {
+  pointer-events: none;
+  stroke: #780269;
+  stroke-width: 2.5;
+}
+
 .swipe-label {
   position: absolute;
   inset: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding-left: 80px;
+  padding-left: 76px;
   padding-right: 12px;
 
   font-family: var(--font-sans);
   font-size: 14px;
-  font-weight: 400;
-
-  color: #D6A15C;
+  font-weight: 600;
+  color: #fff;
 
   pointer-events: none;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
   white-space: nowrap;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
   transition: opacity 0.12s;
 }
-/* Done state */
-.swipe-track.done { background: rgba(120,2,105,0.2); }
-.swipe-track.done .swipe-thumb { background: var(--primary); }
-.swipe-track.done .swipe-thumb svg { stroke: #fff; }
-.swipe-track.done .swipe-label { color: #fff; padding-left: 0; font-weight: 500; }
+
+/* Hint that the thumb should move to the right */
+@keyframes swipe-nudge {
+  0%, 100% { left: 8px; }
+  50% { left: 14px; }
+}
+
+/* Completed state */
+.swipe-track.done {
+  background: rgba(120, 2, 105, 0.92);
+}
+
+.swipe-track.done .swipe-thumb {
+  background: var(--primary);
+  border-color: rgba(255, 255, 255, 0.8);
+  animation: none;
+}
+
+.swipe-track.done .swipe-thumb svg {
+  stroke: #fff;
+}
+
+.swipe-track.done .swipe-label {
+  color: #fff;
+  padding-left: 0;
+  font-weight: 600;
+}
+
+/* Respect accessibility settings */
+@media (prefers-reduced-motion: reduce) {
+  .swipe-thumb {
+    animation: none;
+  }
+}
 
 /* ── Floating petals ───────────────────────── */
 
